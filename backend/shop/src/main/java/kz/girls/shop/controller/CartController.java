@@ -1,8 +1,7 @@
 package kz.girls.shop.controller;
 
-import kz.girls.shop.dto.CartItemResponse;
 import kz.girls.shop.dto.CartRequest;
-import kz.girls.shop.dto.UpdateQuantityRequest;
+import kz.girls.shop.entity.CartItem;
 import kz.girls.shop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,22 +18,14 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping
-    public List<CartItemResponse> getCart(@AuthenticationPrincipal UserDetails user) {
+    public List<CartItem> getCart(@AuthenticationPrincipal UserDetails user) {
         return cartService.getCart(user.getUsername());
     }
 
     @PostMapping
-    public ResponseEntity<CartItemResponse> add(@AuthenticationPrincipal UserDetails user,
-                                                @RequestBody CartRequest req) {
+    public ResponseEntity<CartItem> add(@AuthenticationPrincipal UserDetails user,
+                                        @RequestBody CartRequest req) {
         return ResponseEntity.ok(cartService.addToCart(user.getUsername(), req));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CartItemResponse> updateQuantity(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails user,
-            @RequestBody UpdateQuantityRequest req) {
-        return ResponseEntity.ok(cartService.updateQuantity(id, user.getUsername(), req.getQuantity()));
     }
 
     @DeleteMapping("/{id}")
