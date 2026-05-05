@@ -112,7 +112,7 @@ export default function ProductDetailPage({ apiUrl }) {
         <div className="detail-info">
           <h1>{product.name}</h1>
           <p className="price">${parseFloat(product.price).toFixed(2)}</p>
-          <p className="category-tag">{product.category}</p>
+          <p className="category-tag">{product.category?.name || product.category}</p>
           <p className="description">{product.description}</p>
           
           {product.sizes && product.sizes.length > 0 && (
