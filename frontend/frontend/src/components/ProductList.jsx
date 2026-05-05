@@ -13,9 +13,15 @@ export default function ProductList({ apiUrl, category }) {
   const fetchProducts = async () => {
     try {
       const res = await fetch(apiUrl);
+
+      if (!res.ok) {
+        throw new Error("Server error: " + res.status);
+      }
+
       const data = await res.json();
       setProducts(data);
     } catch (err) {
+      console.error(err);
       notifyError("Error loading products");
       setError("Error loading products");
     }
