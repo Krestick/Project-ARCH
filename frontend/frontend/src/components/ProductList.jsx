@@ -26,51 +26,51 @@ export default function ProductList({ apiUrl, category }) {
   }, []);
 
   const filtered =
-    category === "all" || !category
-      ? products
-      : products.filter((p) => p.category.name === category);
+      category === "all" || !category
+          ? products
+          : products.filter((p) => p.category.name === category);
 
   return (
-    <div className="container">
-      <div className="header-title">
-        <h2>Products</h2>
+      <div className="container">
+        <div className="header-title">
+          <h2>Products</h2>
 
-        {user?.role === "admin" && (
-          <Link to="/products/new" className="btn-add">
-            + Add Product
-          </Link>
-        )}
-      </div>
-
-      <div className="product-grid">
-        {filtered.map((p) => (
-          <div
-            key={p.id}
-            className="product-card"
-            onClick={() => navigate(`/products/${p.id}`)}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src={p.image || "https://picsum.photos/300"}
-              alt={p.name}
-            />
-
-            <h3>{p.name}</h3>мьььььвсьвсьв
-            <p className="price">${parseFloat(p.price).toFixed(2)}</p>
-            <p className="category">{p.category?.name}</p>
-
-            <div className="actions">
-              <Link
-                to={`/products/${p.id}`}
-                className="btn-view"
-                onClick={(e) => e.stopPropagation()}
-              >
-                View
+          {user?.role === "admin" && (
+              <Link to="/products/new" className="btn-add">
+                + Add Product
               </Link>
-            </div>
-          </div>
-        ))}
+          )}
+        </div>
+
+        <div className="product-grid">
+          {filtered.map((p) => (
+              <div
+                  key={p.id}
+                  className="product-card"
+                  onClick={() => navigate(`/products/${p.id}`)}
+                  style={{ cursor: "pointer" }}
+              >
+                <img
+                    src={p.image || "https://picsum.photos/300"}
+                    alt={p.name}
+                />
+
+                <h3>{p.name}</h3>
+                <p className="price">${parseFloat(p.price).toFixed(2)}</p>
+                <p className="category">{p.category?.name}</p>
+
+                <div className="actions">
+                  <Link
+                      to={`/products/${p.id}`}
+                      className="btn-view"
+                      onClick={(e) => e.stopPropagation()}
+                  >
+                    View
+                  </Link>
+                </div>
+              </div>
+          ))}
+        </div>
       </div>
-    </div>
   );
 }
