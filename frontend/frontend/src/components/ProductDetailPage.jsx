@@ -34,9 +34,9 @@ export default function ProductDetailPage({ apiUrl }) {
 
   const handleDeleteClick = () => {
     confirmModal.openModal(
-      "Delete Product",
-      `Are you sure you want to delete "${product.name}"? This action cannot be undone.`,
-      handleConfirmDelete
+        "Delete Product",
+        `Are you sure you want to delete "${product.name}"? This action cannot be undone.`,
+        handleConfirmDelete
     );
   };
 
@@ -67,16 +67,16 @@ export default function ProductDetailPage({ apiUrl }) {
     }
     setAddingToCart(true);
     try {
-      const res = await fetch("http://localhost:5000/cart", {
+      const res = await fetch(`${apiUrl.replace("/products", "")}/cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
-          product_id: parseInt(id),
+          productId: parseInt(id),
           quantity: 1,
-          selected_size: selectedSize || null,
+          selectedSize: selectedSize || null,
         }),
       });
       if (!res.ok) throw new Error("Failed to add to cart");
@@ -96,73 +96,73 @@ export default function ProductDetailPage({ apiUrl }) {
   if (!product) return <div className="container"><p>Loading...</p></div>;
 
   return (
-    <div className="container">
-      <button onClick={() => navigate(-1)} className="btn-back">
-        ← Back
-      </button>
+      <div className="container">
+        <button onClick={() => navigate(-1)} className="btn-back">
+          ← Back
+        </button>
 
-      <div className="detail">
-        <div className="detail-image">
-          <img
-            src={product.image || "https://picsum.photos/300"}
-            alt={product.name}
-          />
+        <div className="detail">
+          <div className="detail-image">
+            <img
+                src={product.image || "https://picsum.photos/300"}
+                alt={product.name}
+            />
+          </div>
+
+          <div className="detail-info">
+            <h1>{product.name}</h1>
+            <p className="price">${parseFloat(product.price).toFixed(2)}</p>
+            <p className="category-tag">{product.category?.name || product.category}</p>
+            <p className="description">{product.description}</p>
+
+            {product.sizes && product.sizes.length > 0 && (
+                <div className="size-selector">
+                  <p className="size-label">Select Size:</p>
+                  <div className="sizes">
+                    {product.sizes.map((size) => (
+                        <button
+                            key={size}
+                            className={`size-btn ${selectedSize === size ? "active" : ""}`}
+                            onClick={() => setSelectedSize(size)}
+                        >
+                          {size}
+                        </button>
+                    ))}
+                  </div>
+                </div>
+            )}
+
+            {user?.role === "client" && (
+                <button
+                    onClick={addToCart}
+                    className="btn-add-to-cart"
+                    disabled={addingToCart}
+                >
+                  {addingToCart ? "Adding..." : "Add to Cart"}
+                </button>
+            )}
+
+            {user?.role === "admin" && (
+                <div className="actions">
+                  <Link to={`/products/${id}/edit`} className="btn-edit">
+                    Edit
+                  </Link>
+                  <button onClick={handleDeleteClick} className="btn-delete" disabled={isDeleting}>
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+            )}
+          </div>
         </div>
 
-        <div className="detail-info">
-          <h1>{product.name}</h1>
-          <p className="price">${parseFloat(product.price).toFixed(2)}</p>
-          <p className="category-tag">{product.category?.name || product.category}</p>
-          <p className="description">{product.description}</p>
-          
-          {product.sizes && product.sizes.length > 0 && (
-            <div className="size-selector">
-              <p className="size-label">Select Size:</p>
-              <div className="sizes">
-                {product.sizes.map((size) => (
-                  <button
-                    key={size}
-                    className={`size-btn ${selectedSize === size ? "active" : ""}`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-            </button>
-                ))}
-        </div>
+        <ConfirmModal
+            isOpen={confirmModal.isOpen}
+            title={confirmModal.title}
+            message={confirmModal.message}
+            onConfirm={confirmModal.handleConfirm}
+            onCancel={confirmModal.closeModal}
+            isLoading={confirmModal.isLoading}
+        />
       </div>
-          )}
-
-          {user?.role === "client" && (
-          <button
-            onClick={addToCart}
-            className="btn-add-to-cart"
-            disabled={addingToCart}
-          >
-            {addingToCart ? "Adding..." : "Add to Cart"}
-          </button>
-          )}
-
-          {user?.role === "admin" && (
-            <div className="actions">
-              <Link to={`/products/${id}/edit`} className="btn-edit">
-                Edit
-              </Link>
-              <button onClick={handleDeleteClick} className="btn-delete" disabled={isDeleting}>
-                {isDeleting ? "Deleting..." : "Delete"}
-              </button>
-      </div>
-          )}
-    </div>
-      </div>
-
-      <ConfirmModal
-        isOpen={confirmModal.isOpen}
-        title={confirmModal.title}
-        message={confirmModal.message}
-        onConfirm={confirmModal.handleConfirm}
-        onCancel={confirmModal.closeModal}
-        isLoading={confirmModal.isLoading}
-      />
-    </div>
   );
 }
