@@ -13,7 +13,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-
+    private final CartItemRepository cartItemRepository;
+    private final OrderRepository orderRepository;
     public List<Product> getAll() {
         return productRepository.findAll();
     }
@@ -57,6 +58,8 @@ public class ProductService {
     }
 
     public void delete(Long id) {
+
+        cartItemRepository.deleteByProductId(id);
         productRepository.deleteById(id);
     }
 }
