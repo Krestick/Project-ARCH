@@ -11,9 +11,9 @@ export default function CartPage({ apiUrl }) {
 
   const fetchCart = async () => {
     try {
-      const res = await fetch(${apiUrl}/cart, {
-      headers: { Authorization: Bearer ${getToken()} },
-    });
+      const res = await fetch(`${apiUrl}/cart`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
     const data = await res.json();
     dispatch(setCart(data));
   } catch {
@@ -23,9 +23,9 @@ export default function CartPage({ apiUrl }) {
 
 const removeItem = async (id) => {
   try {
-    await fetch(${apiUrl}/cart/${id}, {
+    await fetch(`${apiUrl}/cart/${id}`, {
       method: "DELETE",
-          headers: { Authorization: Bearer ${getToken()} },
+      headers: { Authorization: `Bearer ${getToken()}` },
     });
     dispatch(removeFromCart(id));
     notifySuccess("Item removed");
